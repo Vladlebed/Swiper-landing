@@ -1,0 +1,171 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing:border-box;
+  list-style: none;
+  text-decoration: none;
+  outline: 0;
+  border: none;
+}
+
+$container-width-xxxl: 2140px;
+$container-width-xxl: 1440px;
+
+$container-width-xl: 1140px;
+$container-width-lg: 960px;
+$container-width-md: 720px;
+$container-width-sm: 540px;
+$container-width-xs: 100%;
+
+$breakpoint-xxlg: 2199px;
+$breakpoint-xlg: 1499px;
+
+$breakpoint-lg: 1199px;
+$breakpoint-md: 959px;
+$breakpoint-sm: 767px;
+$breakpoint-xs: 575px;
+$indent-space: 15px;
+$prefix: col;
+$grid_size: 12;
+
+@mixin breakpoint($name) {
+    @if $name == xs {
+        @media screen and (max-width: $breakpoint-xs) {
+            @content
+        }
+    } @else if $name == sm {
+        @media screen and (max-width: $breakpoint-sm) {
+            @content
+        }
+    } @else if $name == md {
+        @media screen and (max-width: $breakpoint-md) {
+            @content
+        }
+    } @else if $name == lg {
+        @media screen and (max-width: $breakpoint-lg) {
+            @content
+        }
+    } @else if $name == xl {
+        @media screen and (max-width: $breakpoint-xlg) {
+            @content
+        }
+    } @else if $name == xxl {
+        @media screen and (max-width: $breakpoint-xxlg) {
+            @content
+        }
+    }
+}
+
+.container {
+  width: $container-width-xxxl;
+    padding: {
+        right: $indent-space;
+        left: $indent-space;
+    }
+    margin: {
+        right: auto;
+        left: auto;
+    }
+    &-fluid {
+        width: 100%;
+        padding: {
+            right: $indent-space;
+            left: $indent-space;
+        }
+        margin: {
+            right: auto;
+            left: auto;
+        }
+    }
+}
+
+.row {
+    display: flex;
+    flex-wrap: wrap;
+    margin: {
+      right: -$indent-space;
+      left: -$indent-space;
+    }
+}
+
+.#{$prefix} {
+    flex: auto;
+    padding: {
+        left: $indent-space;
+        right: $indent-space;
+    } 
+}
+
+@for $i from 1 through $grid_size {
+  .#{$prefix}-#{$i} {
+      max-width: percentage($i / $grid_size);
+      flex: 0 0 percentage($i / $grid_size);
+      padding: {
+        left: $indent-space;
+        right: $indent-space;
+      }
+    }
+    .#{$prefix}-offset-#{$i} {
+      margin: {
+        right: percentage($i / $grid_size);
+      }
+    }
+}
+
+@each $size in xxl, xl, lg, md, sm, xs {
+
+  @include breakpoint(#{$size}) {
+
+    @for $i from 1 through $grid_size {
+      .#{$prefix}-#{$size}-#{$i} {
+          max-width: percentage($i / $grid_size);
+          flex: 0 0 percentage($i / $grid_size);
+          padding: {
+            left: $indent-space;
+            right: $indent-space;
+          }
+        }
+        .#{$prefix}-#{$size}-offset-#{$i} {
+          margin: {
+            right: percentage($i / $grid_size);
+          }
+        }
+    }
+
+    .container {
+      @if $size == xs {
+          max-width: $container-width-xs;
+        } @else if $size == sm {
+          max-width: $container-width-sm;
+        } @else if $size == md {
+          max-width: $container-width-md;
+        } @else if $size == lg {
+          max-width: $container-width-lg;
+        } @else if $size == xl {
+          max-width: $container-width-xl;
+        } @else if $size == xxl {
+          max-width: $container-width-xxl;
+        }
+    }
+
+  }
+
+}
+
+@font-face{
+  font-family: 'Montserrat';
+  src: url('../fonts/Montserrat-Regular.otf');
+  src: url('../fonts/Montserrat-Regular.otf') format('otf'),
+  url('../fonts/Montserrat-Regular.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face{
+  font-family: 'Montserrat-bold';
+  src: url('../fonts/Montserrat-Bold.otf');
+  src: url('../fonts/Montserrat-Bold.otf') format('otf'),
+  url('../fonts/Montserrat-Bold.ttf') format('truetype');
+  font-weight: bold;
+  font-style: normal;
+}
