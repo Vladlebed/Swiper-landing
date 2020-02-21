@@ -75,3 +75,21 @@
 		background: #1488ff;
 	}
 }
+
+@keyframes shaking{
+	0%{
+		transform:rotateZ(15deg);
+	}
+	25%{
+		transform:rotateZ(-15deg);
+	}
+	50%{
+		transform:rotateZ(15deg);
+	}
+	75%{
+		transform:rotateZ(-15deg);
+	}
+	100%{
+		transform:rotateZ(10deg);
+	}
+}

@@ -36,6 +36,10 @@ function initial () {
 		}
 	}
 
+	document.body.onselectstart = function() {
+    	return false;
+	};
+
 	//Переменная, которая поможет нам уберечь пользователя
 	//от лишних поворотов колёсика мыши
 	let selectPage = false;
@@ -95,7 +99,6 @@ function initial () {
 			menuLink[i].addEventListener('click',(e)=>{
 				e = e || window.event;
 				e.preventDefault();
-				console.log(targetPage);
 			})
 		}		
 	}
@@ -111,7 +114,9 @@ function initial () {
 	document.body.addEventListener('touchstart',listeners)
 	document.body.addEventListener('mousedown',listeners)
 
-	function listeners(){
+	function listeners(e){
+		e = e || window.event;
+		if(e.target.nodeName === 'IMG') return;
 		barPosOld = barPos;
 		mouseDown = true;
 		touchStart();
@@ -177,8 +182,8 @@ function initial () {
 
 	function swipeUp(e){
 		e = e || window.event;
-
 		let targetPos = e.clientY || e.changedTouches[0].screenY;
+
 		if(barPos > 0){
 			moveUp = true;
 			let fr = Math.round((touchStartPosY / windowSize) * 100);
@@ -208,15 +213,14 @@ function initial () {
 	
 
 	function checkMove() {
-		console.log(percent)
-		if(percent < 20){
+		if(percent < 17){
 			if(!barPosOld) barPosOld = 0;
 			barPos = barPosOld;
 			bar.style.top = `-${barPos}%`;
 			return
 		}
 		if(moveUp === true && targetPage > 0){
-			if(percent >= 20){
+			if(percent >= 17){
 				targetPage--;
 				scrollBar();
 				swiperMove();
@@ -224,7 +228,7 @@ function initial () {
 			}	
 		}
 		if(moveUp === false && targetPage + 1 < pages){
-			if(percent >= 20){
+			if(percent >= 17){
 				targetPage++;
 				scrollBar();
 				swiperMove();
@@ -235,5 +239,27 @@ function initial () {
 
 	function scrollBar(){
 		document.querySelector('.scroll-bar').style.width = (targetPage / (pages - 1)) * 100 + '%';
-	}	
+	}
+
+	let resultArea = document.querySelector('.tab-container__result');
+	let question = document.querySelectorAll('.question-list__item');
+	for(let i = 0;i<question.length;i++){
+		question[i].addEventListener('click',()=>{resultArea.innerHTML = question[i].dataset.result})
+	}
+
+	// let goods;
+
+	// async function getGoods(){
+	// 	try{
+	// 		const response = await fetch('https://converse-goods.firebaseio.com/goods.json',{
+	// 		method: 'GET'})
+	// 		const data = await response.json();
+	// 		goods = data;
+	// 		console.log(goods);		
+	// 	} catch(e){
+	// 		console.error(e)
+	// 	}
+	// }
+
+	
 }
