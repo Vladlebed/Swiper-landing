@@ -1127,9 +1127,31 @@ body {
   font-family: 'Montserrat';
   background: #000; }
 
-section {
+section,
+footer {
   width: 100vw;
   height: 100vh; }
+
+header {
+  width: 100vw;
+  height: 3.125em;
+  background: rgba(0, 0, 0, 0.7);
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 5;
+  -webkit-transition: 0.5s top;
+  transition: 0.5s top;
+  border-bottom: 2px solid #1488ff; }
+  header .scroll-bar {
+    max-width: 100%;
+    background: #FF0069FF;
+    height: 0.125em;
+    position: absolute;
+    bottom: -.125em;
+    left: 0;
+    -webkit-transition: 0.5s width ease-out;
+    transition: 0.5s width ease-out; }
 
 .preloader-box {
   width: 100vw;
@@ -1143,8 +1165,8 @@ section {
   text-align: center;
   -webkit-transition: 0.5s all;
   transition: 0.5s all; }
-  .preloader-box img {
-    width: 150px;
+  .preloader-box__boot1, .preloader-box__boot2 {
+    width: 9.375em;
     position: absolute;
     top: 40%; }
   .preloader-box__boot1 {
@@ -1160,16 +1182,38 @@ section {
     position: relative;
     top: 60%; }
 
+.menu {
+  height: 3.125em;
+  width: 100%;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -ms-flex-wrap: wrap;
+      flex-wrap: wrap; }
+  .menu__link {
+    color: #fff;
+    margin: 0 .5em;
+    -webkit-transition: 0.3s all;
+    transition: 0.3s all;
+    cursor: pointer; }
+    .menu__link.active {
+      color: #1488ff; }
+    .menu__link:hover {
+      color: #1488ff; }
+
 .bar {
   position: relative;
   top: 0;
   left: 0;
-  -webkit-transition: 1s all;
-  transition: 1s all; }
+  -webkit-transition: 0.7s all;
+  transition: 0.7s all; }
 
 .pagination {
   position: fixed;
-  width: 50px;
+  width: 3.125em;
   height: 100vh;
   top: 0;
   right: 0;
@@ -1188,12 +1232,12 @@ section {
           justify-content: center;
   z-index: 5; }
   .pagination__bullet {
-    width: 10px;
-    height: 10px;
+    width: 0.625em;
+    height: 0.625em;
     background: rgba(255, 255, 255, 0.7);
     border-radius: 50%;
     cursor: pointer;
-    margin: 5px 0; }
+    margin: 0.313em 0; }
     .pagination__bullet.active {
       background: #1488ff;
       -webkit-animation: 0.3s setColor linear;
@@ -1225,6 +1269,33 @@ section {
     z-index: 1;
     padding-top: 2em;
     padding-left: 20%; }
+  .main-screen__swipe {
+    font-family: 'Knewave', cursive;
+    text-align: center;
+    font-size: 2em;
+    color: #fff;
+    position: relative;
+    z-index: 2;
+    top: 10em;
+    max-width: 9.125em;
+    margin: 0 auto;
+    cursor: -webkit-grab;
+    cursor: grab; }
+    .main-screen__swipe:after {
+      content: '';
+      position: absolute;
+      right: 1em;
+      top: 0em;
+      display: block;
+      width: 40px;
+      height: 40px;
+      background: url(../img/Curved-Arrow.png);
+      background-repeat: no-repeat;
+      background-size: 100%;
+      background-position: 0 0;
+      z-index: 2;
+      -webkit-transform: rotateZ(140deg);
+              transform: rotateZ(140deg); }
   .main-screen__subtitle {
     font-size: 1.5em;
     color: #cca;
@@ -1234,8 +1305,8 @@ section {
     padding-top: 1em; }
   .main-screen__arrow {
     display: block;
-    width: 75px;
-    height: 75px;
+    width: 4.688em;
+    height: 4.688em;
     background: url(../img/arrow.png);
     background-size: 100%;
     background-repeat: no-repeat;
@@ -1250,3 +1321,9 @@ section {
 .description {
   width: 100vw;
   height: 100vh; }
+
+.section-title {
+  color: #fff;
+  font-size: 2.5em;
+  text-align: center;
+  padding-top: 2.5em; }

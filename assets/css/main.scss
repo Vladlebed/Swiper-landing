@@ -1,5 +1,6 @@
-//Импортируем сетку и шрифты
+//Импортируем сетку, шрифты и анимацию
 @import 'base';
+@import 'fonts';
 @import 'keyframes';
 
 body{
@@ -11,9 +12,32 @@ body{
   background:#000;
 }
 
-section{
+section,
+footer{
   width: 100vw;
   height: 100vh;
+}
+
+header{
+  width: 100vw;
+  height: 3.125em;
+  background: rgba(0,0,0,0.7);
+  position: fixed;
+  // top: -3.125em;
+  top: 0;
+  left: 0;
+  z-index: 5;
+  transition:0.5s top;
+  border-bottom: 2px solid #1488ff;
+  .scroll-bar{
+    max-width: 100%;
+    background: #FF0069FF;
+    height: 0.125em;
+    position: absolute;
+    bottom: -.125em;
+    left: 0;
+    transition:0.5s width ease-out;
+  }
 }
 
 .preloader-box{
@@ -27,8 +51,9 @@ section{
   opacity: 1;
   text-align: center;
   transition:0.5s all;
-  img{
-    width: 150px;
+  &__boot1,
+  &__boot2{
+    width: 9.375em;
     // margin-left: -75px;
     position: absolute;
     top: 40%;
@@ -48,16 +73,36 @@ section{
   }
 }
 
+.menu{
+  height: 3.125em;;
+  width: 100%;
+  display: flex;
+  align-items:center;
+  flex-wrap:wrap;
+  &__link{
+    color: #fff;
+    margin: 0 .5em;
+    transition:0.3s all;
+    cursor: pointer;
+    &.active{
+      color: #1488ff;
+    }
+    &:hover{
+      color: #1488ff;
+    }
+  }
+}
+
 .bar{
   position: relative;
   top: 0;
   left: 0;
-  transition:1s all;
+  transition:0.7s all;
 }
 
 .pagination{
   position: fixed;
-  width: 50px;
+  width: 3.125em;
   height: 100vh;
   top: 0;
   right: 0;
@@ -67,12 +112,12 @@ section{
   justify-content:center;
   z-index: 5;
   &__bullet{
-    width: 10px;
-    height: 10px;
+    width: 0.625em;
+    height: 0.625em;
     background: rgba(255,255,255,0.7);
     border-radius: 50%;
     cursor: pointer;
-    margin: 5px 0;
+    margin: 0.313em 0;
     &.active{
       background: #1488ff;
       animation: 0.3s setColor linear;
@@ -109,7 +154,33 @@ section{
     padding-top: 2em;
     padding-left: 20%;
   }
-
+  &__swipe{
+    font-family: 'Knewave', cursive;
+    text-align: center;
+    font-size: 2em;
+    color: #fff;
+    position: relative;
+    z-index: 2;
+    top: 10em;
+    max-width: 9.125em;
+    margin: 0 auto;
+    cursor: grab;
+    &:after{
+      content: '';
+      position: absolute;
+      right: 1em;
+      top: 0em;
+      display: block;
+      width: 40px;
+      height: 40px;
+      background:url(../img/Curved-Arrow.png);
+      background-repeat: no-repeat;
+      background-size: 100%;
+      background-position: 0 0;
+      z-index: 2;
+      transform:rotateZ(140deg)
+    }
+  }
   &__subtitle{
     font-size: 1.5em;
     color: #cca;
@@ -121,8 +192,8 @@ section{
 
   &__arrow{
     display: block;
-    width: 75px;
-    height: 75px;
+    width: 4.688em;
+    height: 4.688em;
     background: url(../img/arrow.png);
     background-size: 100%;
     background-repeat: no-repeat;
@@ -138,4 +209,11 @@ section{
 .description{
   width: 100vw;
   height: 100vh;
+}
+
+.section-title{
+  color: #fff;
+  font-size: 2.5em;
+  text-align: center;
+  padding-top: 2.5em;
 }

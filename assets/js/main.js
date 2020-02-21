@@ -1,5 +1,5 @@
 'use strict'
-document.addEventListener("DOMContentLoaded", initial);
+document.body.onload = ()=> initial();
 
 function initial () {
 	//Убираем прелоадер, после загрузки страницы
@@ -13,9 +13,12 @@ function initial () {
 	let pagination = document.querySelector('.pagination');
 	let pages = bar.childElementCount;//Получаем общее количество страниц
 	let targetPage = 0;//Целевая страница при каком то событии
+	let barPos = 0;
 	
 	//Рендерим пагинацию
 	pagintionRender();
+	//Проверяем ссылки, убираем дефолтное поведение
+	switchLink();
 
 	function pagintionRender(){
 		pagination.innerHTML = '';
@@ -33,37 +36,189 @@ function initial () {
 		}
 	}
 
+	//Переменная, которая поможет нам уберечь пользователя
+	//от лишних поворотов колёсика мыши
 	let selectPage = false;
 
 	function swiperMove(pos) {
-
+		switchLink();
 		if(pos) {
-			targetPage = pos;
-			bar.style.top = `-${pos * 100}%`;
+			
+			targetPage = +pos;
+			switchLink();
+			barPos = pos * 100;
+			bar.style.top = `-${barPos}%`;
 			pagintionRender()
 			return
 		}
+		//Если функция была вызвана колёсиком,
+		//Установим небольшую задержку в 1 секунду
+		//Что бы не было скоростных путешествий по странице
 		if(selectPage === false){
 			selectPage = true;
-			setTimeout(()=> selectPage = false,1000)
+			setTimeout(()=> selectPage = false,500)
 			pagintionRender()
-			bar.style.top = `-${targetPage * 100}%`;			
+			barPos = targetPage * 100;
+			bar.style.top = `-${barPos}%`;			
 		}
 	}
 
 	function scrollMove (e) {
+		switchLink();
 		e = e || window.event;
 		let delta = e.deltaY || e.detail || e.wheelDelta;
 		e.preventDefault ? e.preventDefault() : (e.returnValue = false);
 		if(delta > 0 && targetPage + 1 < pages && selectPage === false){
 			targetPage++;
 			swiperMove();
+			scrollBar();
 			return
 		}
 		if(delta < 0 && targetPage != 0 && selectPage === false){
 			targetPage--;
 			swiperMove();
+			scrollBar();
 			return
 		}
 	}
+
+	function switchLink(){
+		let menuLink = document.querySelectorAll('.menu__link');
+		for(let i = 0;i < menuLink.length;i++){
+			if(i === targetPage){
+				menuLink[i].classList.add('active');
+			}
+			else{
+				menuLink[i].classList.remove('active');
+			}
+			menuLink[i].addEventListener('click',(e)=>{
+				e = e || window.event;
+				e.preventDefault();
+				console.log(targetPage);
+			})
+		}		
+	}
+
+
+
+	let touchStartPosY;
+	let windowSize = document.body.clientHeight;;
+	let movePos;
+	let percent;
+	let moveUp = false;
+	let mouseDown = false;
+	let barPosOld = 0;
+
+	document.body.addEventListener('mousedown',()=>{
+		barPosOld = barPos;
+		mouseDown = true;
+		touchStart();
+		document.body.addEventListener('mousemove',dragSlider)
+
+		document.body.addEventListener('mouseup',function mouseUp(){
+			document.body.removeEventListener('mousemove',dragSlider)
+			document.body.removeEventListener('mouseup',mouseUp)
+			checkMove();
+			percent = 0;
+			mouseDown = false;
+			document.body.addEventListener('mouseleave',function mouseleave(){
+				document.body.removeEventListener('mousemove',dragSlider)
+				document.body.removeEventListener('mouseleave',mouseleave)
+				if(mouseDown === true){
+					checkMove();
+					percent = 0;
+					mouseDown = false;					
+				}
+				return;
+			})
+		})
+
+	})
+
+	function touchStart(e){
+		e = e || window.event;
+		touchStartPosY = e.clientY
+		movePos = null;
+	}
+	function dragSlider(e){
+		e = e || window.event;
+		if(touchStartPosY < e.clientY) {
+			if(movePos != null && movePos > e.clientY) {
+				touchStart()
+				swipeDown()
+				return
+			}
+			if(e.clientY % 2 === 0) movePos = e.clientY;
+			swipeUp()
+			return
+		}
+		if(touchStartPosY > e.clientY) {	
+			if(movePos != null && movePos < e.clientY) {
+				touchStart()
+				swipeUp()
+				return
+			}
+			if(e.clientY % 2 === 0) movePos = e.clientY;
+			swipeDown()
+			return
+		}
+	}
+
+	function swipeUp(e){
+		if(barPos > 0){
+			moveUp = true;
+			e = e || window.event;
+			let fr = Math.round((touchStartPosY / windowSize) * 100);
+			let swipe = Math.round((e.clientY / windowSize) * 100);
+			let prePos = barPos;
+			prePos -= (swipe -  fr);
+			bar.style.top = `-${prePos}%`;
+			percent = swipe -  fr;
+		}
+	}
+	function swipeDown(e){
+		if(barPos < pages * 100 - 100){
+			moveUp = false;
+			e = e || window.event;
+			let fr = Math.round((touchStartPosY / windowSize) * 100);
+			let swipe = Math.round((e.clientY / windowSize) * 100);
+			let prePos = barPos;
+			prePos +=  (fr - swipe);
+			bar.style.top = `-${prePos}%`;
+			percent = fr - swipe;
+		}
+	}
+
+	
+
+	function checkMove() {
+		console.log(percent);
+		if(percent < 25){
+			if(!barPosOld) barPosOld = 0;
+			barPos = barPosOld;
+			bar.style.top = `-${barPos}%`;
+			return
+		}
+		if(moveUp === true && targetPage > 0){
+			if(percent >= 25){
+				targetPage--;
+				scrollBar();
+				swiperMove();
+				return	
+			}	
+		}
+		if(moveUp === false && targetPage + 1 < pages){
+			if(percent >= 25){
+				targetPage++;
+				scrollBar();
+				swiperMove();
+				return
+			}		
+		}
+
+	}
+
+	function scrollBar(){
+		document.querySelector('.scroll-bar').style.width = (targetPage / (pages - 1)) * 100 + '%';
+	}	
 }
