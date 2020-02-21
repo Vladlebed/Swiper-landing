@@ -46,6 +46,7 @@ function initial () {
 			
 			targetPage = +pos;
 			switchLink();
+			scrollBar();
 			barPos = pos * 100;
 			bar.style.top = `-${barPos}%`;
 			pagintionRender()
@@ -99,29 +100,39 @@ function initial () {
 		}		
 	}
 
-
-
 	let touchStartPosY;
-	let windowSize = document.body.clientHeight;;
+	let windowSize = document.body.clientHeight;
 	let movePos;
 	let percent;
 	let moveUp = false;
 	let mouseDown = false;
 	let barPosOld = 0;
 
-	document.body.addEventListener('mousedown',()=>{
+	document.body.addEventListener('touchstart',listeners)
+	document.body.addEventListener('mousedown',listeners)
+
+	function listeners(){
 		barPosOld = barPos;
 		mouseDown = true;
 		touchStart();
+		document.body.addEventListener('touchmove',dragSlider)
 		document.body.addEventListener('mousemove',dragSlider)
+		document.body.addEventListener('touchend',mouseUp)
+		document.body.addEventListener('mouseup',mouseUp)
 
-		document.body.addEventListener('mouseup',function mouseUp(){
+		function mouseUp(){
+			document.body.removeEventListener('touchmove',dragSlider)
+			document.body.removeEventListener('touchend',mouseUp)
 			document.body.removeEventListener('mousemove',dragSlider)
 			document.body.removeEventListener('mouseup',mouseUp)
 			checkMove();
 			percent = 0;
 			mouseDown = false;
-			document.body.addEventListener('mouseleave',function mouseleave(){
+			document.body.addEventListener('touchcancel',mouseleave)
+			document.body.addEventListener('mouseleave',mouseleave)
+			function mouseleave(){
+				document.body.removeEventListener('touchmove',dragSlider)
+				document.body.removeEventListener('touchcancel',mouseleave)
 				document.body.removeEventListener('mousemove',dragSlider)
 				document.body.removeEventListener('mouseleave',mouseleave)
 				if(mouseDown === true){
@@ -130,46 +141,48 @@ function initial () {
 					mouseDown = false;					
 				}
 				return;
-			})
-		})
-
-	})
+			}
+		}	
+	}
 
 	function touchStart(e){
 		e = e || window.event;
-		touchStartPosY = e.clientY
+		touchStartPosY = e.clientY || e.changedTouches[0].screenY;
 		movePos = null;
 	}
 	function dragSlider(e){
 		e = e || window.event;
-		if(touchStartPosY < e.clientY) {
-			if(movePos != null && movePos > e.clientY) {
+		let tatgetPos = e.clientY || e.changedTouches[0].screenY;	
+		if(touchStartPosY < tatgetPos) {
+			if(movePos != null && movePos > tatgetPos) {
 				touchStart()
 				swipeDown()
 				return
 			}
-			if(e.clientY % 2 === 0) movePos = e.clientY;
+			if(tatgetPos % 2 === 0) movePos = tatgetPos;
 			swipeUp()
 			return
 		}
-		if(touchStartPosY > e.clientY) {	
-			if(movePos != null && movePos < e.clientY) {
+		if(touchStartPosY > tatgetPos) {	
+			if(movePos != null && movePos < tatgetPos) {
 				touchStart()
 				swipeUp()
 				return
 			}
-			if(e.clientY % 2 === 0) movePos = e.clientY;
+			if(tatgetPos % 2 === 0) movePos = tatgetPos;
 			swipeDown()
 			return
 		}
 	}
 
 	function swipeUp(e){
+		e = e || window.event;
+
+		let targetPos = e.clientY || e.changedTouches[0].screenY;
 		if(barPos > 0){
 			moveUp = true;
-			e = e || window.event;
 			let fr = Math.round((touchStartPosY / windowSize) * 100);
-			let swipe = Math.round((e.clientY / windowSize) * 100);
+			let swipe = Math.round((targetPos / windowSize) * 100);
 			let prePos = barPos;
 			prePos -= (swipe -  fr);
 			bar.style.top = `-${prePos}%`;
@@ -177,12 +190,15 @@ function initial () {
 		}
 	}
 	function swipeDown(e){
+		e = e || window.event;
+		let targetPos = e.clientY || e.changedTouches[0].screenY;
+
 		if(barPos < pages * 100 - 100){
 			moveUp = false;
-			e = e || window.event;
 			let fr = Math.round((touchStartPosY / windowSize) * 100);
-			let swipe = Math.round((e.clientY / windowSize) * 100);
+			let swipe = Math.round((targetPos / windowSize) * 100);
 			let prePos = barPos;
+
 			prePos +=  (fr - swipe);
 			bar.style.top = `-${prePos}%`;
 			percent = fr - swipe;
@@ -192,15 +208,15 @@ function initial () {
 	
 
 	function checkMove() {
-		console.log(percent);
-		if(percent < 25){
+		console.log(percent)
+		if(percent < 20){
 			if(!barPosOld) barPosOld = 0;
 			barPos = barPosOld;
 			bar.style.top = `-${barPos}%`;
 			return
 		}
 		if(moveUp === true && targetPage > 0){
-			if(percent >= 25){
+			if(percent >= 20){
 				targetPage--;
 				scrollBar();
 				swiperMove();
@@ -208,14 +224,13 @@ function initial () {
 			}	
 		}
 		if(moveUp === false && targetPage + 1 < pages){
-			if(percent >= 25){
+			if(percent >= 20){
 				targetPage++;
 				scrollBar();
 				swiperMove();
 				return
 			}		
 		}
-
 	}
 
 	function scrollBar(){
