@@ -14,11 +14,19 @@ function initial () {
 	let pages = bar.childElementCount;//Получаем общее количество страниц
 	let targetPage = 0;//Целевая страница при каком то событии
 	let barPos = 0;
-	
+
+	//Переменная, которая поможет нам уберечь пользователя
+	//от лишних поворотов колёсика мыши
+	let selectPage = false;
+
+	let menuLink = document.querySelectorAll('.menu__link');
+
 	//Рендерим пагинацию
 	pagintionRender();
 	//Проверяем ссылки, убираем дефолтное поведение
 	switchLink();
+
+	checkHash();
 
 	function pagintionRender(){
 		pagination.innerHTML = '';
@@ -40,15 +48,11 @@ function initial () {
     	return false;
 	};
 
-	//Переменная, которая поможет нам уберечь пользователя
-	//от лишних поворотов колёсика мыши
-	let selectPage = false;
-
 	function swiperMove(pos) {
 		switchLink();
-		if(pos) {
-			
+		if(pos) {	
 			targetPage = +pos;
+			addHash(`#page${targetPage+1}`,true)
 			switchLink();
 			scrollBar();
 			barPos = pos * 100;
@@ -61,6 +65,7 @@ function initial () {
 		//Что бы не было скоростных путешествий по странице
 		if(selectPage === false){
 			selectPage = true;
+			addHash(`#page${targetPage+1}`,true)
 			setTimeout(()=> selectPage = false,500)
 			pagintionRender()
 			barPos = targetPage * 100;
@@ -87,8 +92,27 @@ function initial () {
 		}
 	}
 
+	function addHash(selectPage,checkFunc){
+		document.location.hash = selectPage || targetPage;
+		if(checkFunc != true) checkHash();
+	}
+
+	function checkHash(){
+		let hash = document.location.hash.split('#page')[1] - 1;
+		if(hash && hash <= pages) {
+			targetPage = hash;
+			swiperMove()
+		}
+		else {
+			document.location.hash = '';
+			targetPage = 0;
+			swiperMove()
+		}
+		scrollBar()
+	}
+
 	function switchLink(){
-		let menuLink = document.querySelectorAll('.menu__link');
+		console.log('switchLink')
 		for(let i = 0;i < menuLink.length;i++){
 			if(i === targetPage){
 				menuLink[i].classList.add('active');
@@ -96,12 +120,17 @@ function initial () {
 			else{
 				menuLink[i].classList.remove('active');
 			}
-			menuLink[i].addEventListener('click',(e)=>{
-				e = e || window.event;
-				e.preventDefault();
-			})
 		}		
 	}
+
+	(function(){
+		for(let i = 0;i < menuLink.length;i++){
+		menuLink[i].addEventListener('click',(e)=>{
+			e.preventDefault();
+			e = e || window.event;	
+			addHash(e.target.getAttribute('href'));
+		})
+	}}())
 
 	let touchStartPosY;
 	let windowSize = document.body.clientHeight;
@@ -116,7 +145,7 @@ function initial () {
 
 	function listeners(e){
 		e = e || window.event;
-		if(e.target.nodeName === 'IMG') return;
+		if(e.target.nodeName === 'IMG' || e.target === document.querySelector('.tab-container__question')) return;
 		barPosOld = barPos;
 		mouseDown = true;
 		touchStart();
@@ -157,24 +186,24 @@ function initial () {
 	}
 	function dragSlider(e){
 		e = e || window.event;
-		let tatgetPos = e.clientY || e.changedTouches[0].screenY;	
-		if(touchStartPosY < tatgetPos) {
-			if(movePos != null && movePos > tatgetPos) {
+		let targetPos = e.clientY || e.changedTouches[0].screenY;	
+		if(touchStartPosY < targetPos) {
+			if(movePos != null && movePos > targetPos) {
 				touchStart()
 				swipeDown()
 				return
 			}
-			if(tatgetPos % 2 === 0) movePos = tatgetPos;
+			if(targetPos % 2 === 0) movePos = targetPos;
 			swipeUp()
 			return
 		}
-		if(touchStartPosY > tatgetPos) {	
-			if(movePos != null && movePos < tatgetPos) {
+		if(touchStartPosY > targetPos) {	
+			if(movePos != null && movePos < targetPos) {
 				touchStart()
 				swipeUp()
 				return
 			}
-			if(tatgetPos % 2 === 0) movePos = tatgetPos;
+			if(targetPos % 2 === 0) movePos = targetPos;
 			swipeDown()
 			return
 		}
@@ -210,8 +239,6 @@ function initial () {
 		}
 	}
 
-	
-
 	function checkMove() {
 		if(percent < 17){
 			if(!barPosOld) barPosOld = 0;
@@ -222,16 +249,18 @@ function initial () {
 		if(moveUp === true && targetPage > 0){
 			if(percent >= 17){
 				targetPage--;
-				scrollBar();
+				scrollBar();		
 				swiperMove();
+				// addHash(targetPage,false)
 				return	
 			}	
 		}
 		if(moveUp === false && targetPage + 1 < pages){
 			if(percent >= 17){
 				targetPage++;
-				scrollBar();
+				scrollBar();	
 				swiperMove();
+				// addHash(targetPage,false)
 				return
 			}		
 		}
@@ -241,25 +270,33 @@ function initial () {
 		document.querySelector('.scroll-bar').style.width = (targetPage / (pages - 1)) * 100 + '%';
 	}
 
-	let resultArea = document.querySelector('.tab-container__result');
-	let question = document.querySelectorAll('.question-list__item');
-	for(let i = 0;i<question.length;i++){
-		question[i].addEventListener('click',()=>{resultArea.innerHTML = question[i].dataset.result})
+	function listenerQuestion(){
+		let resultArea = document.querySelector('.tab-container__result');
+		let question = document.querySelectorAll('.question-list__item');
+		for(let i = 0;i<question.length;i++){
+			question[i].addEventListener('click',()=>{resultArea.innerHTML = question[i].dataset.result})
+		}		
 	}
 
-	// let goods;
+	listenerQuestion()
 
-	// async function getGoods(){
-	// 	try{
-	// 		const response = await fetch('https://converse-goods.firebaseio.com/goods.json',{
-	// 		method: 'GET'})
-	// 		const data = await response.json();
-	// 		goods = data;
-	// 		console.log(goods);		
-	// 	} catch(e){
-	// 		console.error(e)
-	// 	}
-	// }
-
-	
+	let questionTab = document.querySelectorAll('.tab-container__question');
+	let questionList = document.querySelector('.tab-container__question-list-mobile');
+	for(let i = 0;i<questionTab.length;i++){
+		questionTab[i].addEventListener('touchstart',(event)=>{
+			for(let j = 0;j<questionTab.length;j++){
+				questionTab[j].classList.remove('active');
+				questionList.style.left = '40%';
+				questionTab[j].style.width = '40%';
+				questionTab[j].style.borderRight = '2px solid #1488ff';
+			}
+			while (questionList.firstChild) {
+    			questionList.removeChild(questionList.firstChild);
+			}
+			let clone = event.target.firstElementChild.cloneNode(true);	
+			questionList.appendChild(clone);
+			questionTab[i].classList.add('active');
+			listenerQuestion()	
+		})
+	}
 }
