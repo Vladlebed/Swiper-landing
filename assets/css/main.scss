@@ -24,7 +24,6 @@ header{
   height: 3.125em;
   background: rgba(0,0,0,0.7);
   position: fixed;
-  // top: -3.125em;
   top: 0;
   left: 0;
   z-index: 5;
@@ -55,7 +54,6 @@ header{
   &__boot1,
   &__boot2{
     width: 9.375em;
-    // margin-left: -75px;
     position: absolute;
     top: 40%;
   }
@@ -149,7 +147,7 @@ header{
   }
   &__title{
     font-size: 3em;
-    color: #fff !important;
+    color: #fff;
     position: relative;
     z-index: 1;
     padding-top: 25vh;
@@ -172,8 +170,8 @@ header{
       right: 1em;
       top: 0em;
       display: block;
-      width: 40px;
-      height: 40px;
+      width: 2.500em;
+      height: 2.500em;
       background:url(../img/Curved-Arrow.png);
       background-repeat: no-repeat;
       background-size: 100%;
@@ -187,7 +185,7 @@ header{
   }
   &__subtitle{
     font-size: 1.5em;
-    color: #cca !important;
+    color: #cca;
     position: relative;
     z-index: 1;
     text-align: center;
@@ -227,8 +225,8 @@ header{
   position: relative;
   &:before{
     content: '';
-    width: 50px;
-    height: 50px;
+    width: 1.125em;
+    height: 1.125em;
     position: absolute;
     background:url(../img/logo.png);
     background-position: 0 0;
@@ -239,8 +237,8 @@ header{
   }
   &:after{
     content: '';
-    width: 50px;
-    height: 50px;
+    width: 1.125em;
+    height: 1.125em;
     background:url(../img/logo.png);
     background-position: 0 0;
     background-size: 100%;
@@ -292,14 +290,8 @@ header{
     transition:0.3s width;
     &.active{
       color: #1488ff;
-      border-right: 2px solid #1AE48EFF !important;
+      border-right: 0.125em solid #1AE48EFF !important;
     }
-    // &:hover{
-    //   color: #1488ff;
-    // }
-    // &:last-child{
-    //   float: left;
-    // }
     &:hover .question-list{
       opacity: 1;
       visibility: visible;     
@@ -335,13 +327,13 @@ header{
     &:before{
       content: '';
       position: absolute;
-      left: -8px;
-      top: 13px;
+      left: -0.500em;
+      top: 0.813em;
       width: 0;
       height: 0;
       opacity: 0.9;
       border-style: solid;
-      border-width: 7.5px 8px 7.5px 0;
+      border-width: 0.469em 0.500em 0.469em 0;
       border-color: transparent #ffffff transparent transparent;
     }
     &:hover{
@@ -359,12 +351,30 @@ header{
   color: #fff;
 }
 
+@media screen and (max-width: 3900px){
+  body{
+    font-size: 3em !important;
+  }
+}
+@media screen and (max-width: 2700px){
+  body{
+    font-size: 2em !important;
+  }
+}
+@media screen and (max-width: 1950px){
+  body{
+    font-size: 1em !important;
+  }
+}
+
 @media screen and (max-width: 768px){
   body{
     font-size: .8em;
   }
   header{
-    display: none;
+    nav{
+      margin: 0 auto;
+    }
   }
   .pagination{
     width: 1.625em;
@@ -375,7 +385,8 @@ header{
     width: 37vw;
   }
   .section-title{
-    padding: .3em 0;
+    padding: 1.9em 0;
+    padding-bottom: .7em;
     font-size: 2em;
     &:before,
     &:after{
@@ -398,14 +409,20 @@ header{
   }
   .main-screen{
     background: url(../img/cv.png);
-    background-position: 0 0;
+    background-position: 50%;
     background-repeat: no-repeat;
-    background-size: 100%;
+    background-size: 75%;
     &__swipe{
       top: 20vh;
     }
     &__video{
       display: none;
+    }
+    &__subtitle{
+      // color: #21DD8AFF;
+      background:rgba(0,0,0,0.8);
+      margin-top: 5vh;
+      padding-top: 0;
     }
   }
   .tab-container{
@@ -439,11 +456,18 @@ header{
           color: #fff;
           cursor: pointer;
           padding-left: .2em;
+          font-size: .92em;
         }
         &:before{
           display: none;
         }
       }
+    }
+  }
+  .preloader-box{
+    &__boot1,
+    &__boot2{
+      margin-left: -4.688em;
     }
   }
 }

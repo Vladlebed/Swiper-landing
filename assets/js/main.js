@@ -165,6 +165,7 @@ function initial () {
 			document.body.addEventListener('touchcancel',mouseleave)
 			document.body.addEventListener('mouseleave',mouseleave)
 			function mouseleave(){
+				console.log('mouseleave');
 				document.body.removeEventListener('touchmove',dragSlider)
 				document.body.removeEventListener('touchcancel',mouseleave)
 				document.body.removeEventListener('mousemove',dragSlider)

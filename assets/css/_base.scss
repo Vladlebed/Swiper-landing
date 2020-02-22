@@ -8,6 +8,7 @@
   border: none;
 }
 
+$container-width-xxxxl: 3000px;
 $container-width-xxxl: 2140px;
 $container-width-xxl: 1440px;
 
@@ -17,6 +18,7 @@ $container-width-md: 720px;
 $container-width-sm: 540px;
 $container-width-xs: 100%;
 
+$breakpoint-xxxlg: 3100px;
 $breakpoint-xxlg: 2199px;
 $breakpoint-xlg: 1499px;
 
@@ -53,11 +55,15 @@ $grid_size: 12;
         @media screen and (max-width: $breakpoint-xxlg) {
             @content
         }
+    } @else if $name == xxxl {
+        @media screen and (max-width: $breakpoint-xxxlg) {
+            @content
+        }
     }
 }
 
 .container {
-  width: $container-width-xxxl;
+  width: $container-width-xxxxl;
     padding: {
         right: $indent-space;
         left: $indent-space;
@@ -112,7 +118,7 @@ $grid_size: 12;
     }
 }
 
-@each $size in xxl, xl, lg, md, sm, xs {
+@each $size in xxxl, xxl, xl, lg, md, sm, xs {
 
   @include breakpoint(#{$size}) {
 
@@ -145,6 +151,8 @@ $grid_size: 12;
           max-width: $container-width-xl;
         } @else if $size == xxl {
           max-width: $container-width-xxl;
+        } @else if $size == xxxl {
+          max-width: $container-width-xxxl;
         }
     }
 
