@@ -353,23 +353,23 @@ header{
 
 @media screen and (max-width: 3900px){
   body{
-    font-size: 3em !important;
+    font-size: 3em;
   }
 }
 @media screen and (max-width: 2700px){
   body{
-    font-size: 2em !important;
+    font-size: 2em;
   }
 }
 @media screen and (max-width: 1950px){
   body{
-    font-size: 1em !important;
+    font-size: 1em;
   }
 }
 
 @media screen and (max-width: 768px){
   body{
-    font-size: .8em;
+    font-size: .75em;
   }
   header{
     nav{
@@ -419,7 +419,6 @@ header{
       display: none;
     }
     &__subtitle{
-      // color: #21DD8AFF;
       background:rgba(0,0,0,0.8);
       margin-top: 5vh;
       padding-top: 0;
