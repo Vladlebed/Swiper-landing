@@ -156,9 +156,9 @@ function initial() {
     function listeners(e) {
         e = e || window.event;
         //Останавливаем функцию, если touch событие произошло на картинках или табах
-        //Можно было бы конечно отключить ванильный Drag and Drop на всех изображениях
+        //Можно было бы конечно отключить ванильный Drag and Drop на всех изображениях 
         //Но у нас на странице их слишком мало
-        if (e.target.nodeName === 'IMG' || e.target === document.querySelector('.tab-container__question')) return;
+        if (e.target.nodeName === 'IMG' || e.target === document.querySelector('.tab-container__question') || e.target === document.querySelector('.preloader-box')) return;
         barPosOld = barPos;//Заносим текущую позицию слайдера, до начала работы Drag функций
         mouseDown = true;
         touchStart();
