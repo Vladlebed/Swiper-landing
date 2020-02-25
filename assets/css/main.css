@@ -1286,6 +1286,16 @@
   100% {
     -webkit-transform: rotateZ(10deg);
             transform: rotateZ(10deg); } }
+@-webkit-keyframes dot {
+  0% {
+    color: #fff; }
+  100% {
+    color: #000; } }
+@keyframes dot {
+  0% {
+    color: #fff; }
+  100% {
+    color: #000; } }
 body {
   font-size: 1em;
   width: 100vw;
@@ -1349,6 +1359,25 @@ header {
     color: #fff !important;
     position: relative;
     top: 60%; }
+
+.dotted {
+  color: #fff;
+  -webkit-animation: 0.5s dot infinite;
+          animation: 0.5s dot infinite;
+  -webkit-animation-delay: 0.1s;
+          animation-delay: 0.1s; }
+  .dotted:before {
+    content: '.';
+    color: #fff;
+    -webkit-animation: 0.5s dot infinite;
+            animation: 0.5s dot infinite; }
+  .dotted:after {
+    content: '.';
+    color: #fff;
+    -webkit-animation: 0.5s dot infinite;
+            animation: 0.5s dot infinite;
+    -webkit-animation-delay: 0.2s;
+            animation-delay: 0.2s; }
 
 .menu {
   height: 3.125em;

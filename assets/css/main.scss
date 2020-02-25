@@ -72,6 +72,24 @@ header{
   }
 }
 
+.dotted{
+  color: #fff;
+  animation: 0.5s dot infinite;
+  animation-delay: 0.1s;
+  &:before{
+    content: '.';
+    color: #fff;
+    animation: 0.5s dot infinite;
+
+  }
+  &:after{
+    content: '.';
+    color: #fff;
+    animation: 0.5s dot infinite;
+    animation-delay: 0.2s;
+  }
+}
+
 .menu{
   height: 3.125em;;
   width: 100%;
